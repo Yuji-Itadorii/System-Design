@@ -1,10 +1,40 @@
 1. Requirements
 	
 - Functional = What system does:
-    - 
+    - paste/provide text 
+    - generate short url
+    - share the generated url
+    - open the generated short url and able to view the content
+    - link should be expire after certain timespan
     
-    - Non-functional = How system performs (Scalability, Availability, Consistency, Latency, Reliability)
-2. Estimation
+- Non-functional = How system performs (Scalability, Availability, Consistency, Latency, Reliability)
+    - high Availability of text
+    - short link should have low Latency
+
+- Out of Scope for v1
+    - user registration
+    - limit visibility of text 
+
+- Assumption 
+    - 10 million users (10,000,000) monthly
+    - 10:1 read/write ratio 
+    - average size of text pasted is 2kB
+    - each user create 5 write per day
+
+2. Estimation: (QPS / throughput, storage)
+
+- Traffic (from assumptions: 10M MAU, 5 writes/user/day, 10:1 read:write → 50 reads/user/day)
+    - Writes per day: 5 × 10,000,000 = 50M
+    - Reads per day: 50 × 10,000,000 = 500M
+    - Average write QPS: 50M ÷ 86,400 ≈ 580
+    - Average read QPS: 500M ÷ 86,400 ≈ 5,800
+    - (Peak QPS is often modeled as ~2–3× average for capacity; tune to your spike story.)
+
+- Storage (paste body only; add a small fudge for metadata / indexes)
+    - New data per day: 2 kB × 5 × 10,000,000 ≈ 100 GB/day (order-of-magnitude; ~102 GB/day if using 2 KiB = 2048 B)
+    - New data per month (30 days): ≈ 3 TB from bodies alone if nothing expires—TTL caps *retained* storage; estimate max retained ≈ daily_new × typical_max_ttl_days.
+
+
 3. High-Level Design
 4. Core Implementation and Data Model
 5. Scale
