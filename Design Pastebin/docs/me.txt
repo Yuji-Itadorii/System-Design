@@ -1,0 +1,11 @@
+1. Requirements
+	
+- Functional = What system does:
+    - 
+    
+    - Non-functional = How system performs (Scalability, Availability, Consistency, Latency, Reliability)
+2. Estimation
+3. High-Level Design
+4. Core Implementation and Data Model
+5. Scale
+6. Trade-offs
