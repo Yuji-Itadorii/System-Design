@@ -35,7 +35,33 @@
     - New data per month (30 days): ≈ 3 TB from bodies alone if nothing expires—TTL caps *retained* storage; estimate max retained ≈ daily_new × typical_max_ttl_days.
 
 
-3. High-Level Design
-4. Core Implementation and Data Model
+3. High-Level Design 
+    - diagram at ../diagram/high_level_diagram.png
+
+
+4. Core Implementation and Data Model (Database Schema, API contract, Implementation, Class diagram)
+
+- Database
+    - table: pastebin_metadata (or pastebin_meta_data)
+    - fields: id, created_at, expire_at, s3_path, short_url_hash
+    - primary key: id (internal)
+    - unique: short_url_hash (public lookup key; read path should hit this—unique constraint gives an index in most DBs)
+    - paste body: object at s3_path (metadata row points to blob)
+
+- API contract
+    - read-api
+        - request: GET https://pastebin.com/{short_url_hash} (query form ?hash= also works; path style is common for short links)
+        - response: created_at, expire_at, text (text loaded via s3_path after metadata lookup)
+
+    - write-api
+        - request: POST https://pastebin.com/api/v1/store — body: { text, expire_at } (or ttl_seconds if you prefer duration)
+        - response: short_url (or short_url_hash + base URL), status
+
+    - Implementation
+        - code / notes: ../code/
+
+    - Class diagram (optional for LLD): link or sketch when you model service internals
+
+
 5. Scale
 6. Trade-offs
