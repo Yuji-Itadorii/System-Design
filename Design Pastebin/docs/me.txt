@@ -58,7 +58,8 @@
         - response: short_url (or short_url_hash + base URL), status
 
     - Implementation
-        - code / notes: ../code/
+        - stack: Java + Spring Boot (REST controllers, services; DB + S3 via Spring Data / AWS SDK as you wire it)
+        - code / notes: ../pastebin/
 
     - Class diagram (optional for LLD): link or sketch when you model service internals
 
